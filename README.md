@@ -31,5 +31,5 @@ This fork only includes the instructions and dockerfile to run chromium inside d
 3. Run container
 
   ```bash
-  sudo docker run -e DISPLAY=[YOUR_IP]:0 -v /tmp/.X11-unix:/tmp/.X11-unix --privileged --security-opt seccomp=~/chrome.json quartzedchromium:dockerfile"
+  sudo docker run -e DISPLAY=[YOUR_IP]:0 -v /tmp/.X11-unix:/tmp/.X11-unix --privileged --security-opt seccomp=~/chrome.json quartzedchromium:dockerfile
   ```
