@@ -18,7 +18,7 @@
 # 	wget https://raw.githubusercontent.com/jfrazelle/dotfiles/master/etc/docker/seccomp/chrome.json -O ~/chrome.json
 
 # Base docker image
-FROM debian:buster-slim
+FROM debian:jessie-slim
 LABEL maintainer "Jessie Frazelle <jess@linux.com>"
 
 # Install Chromium
@@ -34,7 +34,7 @@ RUN apt-get update && apt-get install -y \
       libgl1-mesa-glx \
       libpango1.0-0 \
       libv4l-0 \
-      fonts-symbola \
+#      fonts-symbola \
       --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /etc/chromium.d/ \
@@ -61,4 +61,4 @@ RUN groupadd -r chromium && useradd -r -g chromium -G audio,video chromium \
 USER chromium
 
 ENTRYPOINT [ "/usr/bin/chromium" ]
-CMD [ "--user-data-dir=/data" ]
+CMD [ "--user-data-dir=/data --disable-gpu --disable-extensions" ]

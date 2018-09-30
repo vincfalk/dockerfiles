@@ -1,29 +1,35 @@
-## dockerfiles
+#### Fork of https://github.com/jessfraz/dockerfiles
 
-[![Travis CI](https://travis-ci.org/jessfraz/dockerfiles.svg?branch=master)](https://travis-ci.org/jessfraz/dockerfiles)
+This fork only includes the instructions and dockerfile to run chromium inside docker on MacOS
 
-This is a repo to hold various Dockerfiles for images I create.
+### Setup
 
-I try to make sure each has a command at the top for running it,
-if a file you are looking at does not have a command, please
-pull request it!
+1. Install XQuartz: https://www.xquartz.org/
+2. Allow network connections in XQuartz preferences (security tab)
+3. Build dockerfile
 
-Almost all of these live on dockerhub under [jess](https://hub.docker.com/u/jess/).
-Because you cannot use notary with autobuilds on dockerhub I also build these
-continuously on a private registry at [r.j3ss.co](https://r.j3ss.co/) for public download. (You're
-welcome.)
+  ```bash
+    sudo docker build -t "quartzedchromium:dockerfile" .
+  ```
 
-You may also want to checkout my [dotfiles](https://github.com/jessfraz/dotfiles), specifically the aliases for all these files which are here: [github.com/jessfraz/dotfiles/blob/master/.dockerfunc](https://github.com/jessfraz/dotfiles/blob/master/.dockerfunc).
+4. Add/customize seccomp profile: https://raw.githubusercontent.com/jfrazelle/dotfiles/master/etc/docker/seccomp/chrome.json
 
-## Using the `Makefile`
+### Run
 
-```
-$ make help
-build                          Builds all the dockerfiles in the repository.
-dockerfiles                    Tests the changes to the Dockerfiles build.
-image                          Build a Dockerfile (ex. DIR=telnet).
-latest-versions                Checks all the latest versions of the Dockerfile contents.
-run                            Run a Dockerfile from the command at the top of the file (ex. DIR=telnet).
-shellcheck                     Runs the shellcheck tests on the scripts.
-test                           Runs the tests on the repository.
-```
+1. Add host IP for auth:
+
+  ```bash
+    xhost + $(ifconfig en1 | grep inet | awk '$1=="inet" {print $2}')
+  ```
+
+2. Run XQuartz
+
+  ```bash
+  open -a XQuartz
+  ```
+
+3. Run container
+
+  ```bash
+  sudo docker run -e DISPLAY=[YOUR_IP]:0 -v /tmp/.X11-unix:/tmp/.X11-unix --privileged --security-opt seccomp=~/chrome.json quartzedchromium:dockerfile"
+  ```
